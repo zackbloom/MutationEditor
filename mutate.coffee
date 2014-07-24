@@ -12,22 +12,22 @@ apply = (element, orders) ->
     for k, v of orders.attrs
       element.setAttribute k, v
 
+checkNode = (addedNode) ->
+  switch addedNode.nodeType
+    when 1
+      for selector, options of changes
+        if addedNode.matches(selector)
+          apply(addedNode, options)
+
+    when 3
+      for before, after of textChanges
+        addedNode.textContent = addedNode.textContent.replace(before, after)
+
 observer = new MutationObserver (mutations) ->
   for mutation in mutations
     for addedNode in mutation.addedNodes
-      switch addedNode.nodeType
-        when 1
-          for selector, options of changes
-            if addedNode.matches(selector)
-              apply(addedNode, options)
-
-        when 3
-          for before, after of textChanges
-            addedNode.textContent = addedNode.textContent.replace(before, after)
+      checkNode(addedNode)
 
 observer.observe document.documentElement,
   childList: true
   subtree: true
-
-setTimeout ->
-  document.documentElement.style.display = ''

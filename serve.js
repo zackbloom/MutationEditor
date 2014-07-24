@@ -31,7 +31,7 @@ http.createServer(function(request, response) {
         response.writeHead(200);
         response.write(file, "binary");
         response.end();
-      }, 500);
+      }, 1000);
     });
   });
 }).listen(parseInt(port, 10));

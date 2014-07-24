@@ -1,5 +1,5 @@
 (function() {
-  var apply, changes, observer, textChanges;
+  var apply, changes, checkNode, observer, scan, textChanges;
 
   changes = {
     'h1': {
@@ -32,8 +32,33 @@
     }
   };
 
+  checkNode = function(addedNode) {
+    var after, before, options, selector, _results, _results1;
+    switch (addedNode.nodeType) {
+      case 1:
+        _results = [];
+        for (selector in changes) {
+          options = changes[selector];
+          if (addedNode.matches(selector)) {
+            _results.push(apply(addedNode, options));
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
+        break;
+      case 3:
+        _results1 = [];
+        for (before in textChanges) {
+          after = textChanges[before];
+          _results1.push(addedNode.textContent = addedNode.textContent.replace(before, after));
+        }
+        return _results1;
+    }
+  };
+
   observer = new MutationObserver(function(mutations) {
-    var addedNode, after, before, mutation, options, selector, _i, _len, _results;
+    var addedNode, mutation, _i, _len, _results;
     _results = [];
     for (_i = 0, _len = mutations.length; _i < _len; _i++) {
       mutation = mutations[_i];
@@ -43,36 +68,7 @@
         _results1 = [];
         for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
           addedNode = _ref[_j];
-          switch (addedNode.nodeType) {
-            case 1:
-              _results1.push((function() {
-                var _results2;
-                _results2 = [];
-                for (selector in changes) {
-                  options = changes[selector];
-                  if (addedNode.matches(selector)) {
-                    _results2.push(apply(addedNode, options));
-                  } else {
-                    _results2.push(void 0);
-                  }
-                }
-                return _results2;
-              })());
-              break;
-            case 3:
-              _results1.push((function() {
-                var _results2;
-                _results2 = [];
-                for (before in textChanges) {
-                  after = textChanges[before];
-                  _results2.push(addedNode.textContent = addedNode.textContent.replace(before, after));
-                }
-                return _results2;
-              })());
-              break;
-            default:
-              _results1.push(void 0);
-          }
+          _results1.push(checkNode(addedNode));
         }
         return _results1;
       })());
@@ -85,8 +81,19 @@
     subtree: true
   });
 
-  setTimeout(function() {
-    return document.documentElement.style.display = '';
-  });
+  scan = function(el) {
+    var child, _i, _len, _ref, _results;
+    checkNode(el);
+    if (!el.childList) {
+      return;
+    }
+    _ref = el.childList;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      child = _ref[_i];
+      _results.push(scan(child));
+    }
+    return _results;
+  };
 
 }).call(this);
