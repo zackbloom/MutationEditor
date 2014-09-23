@@ -1,7 +1,9 @@
 origSrc = "http://www.ihd-wallpapers.com/wp-content/uploads/2014/08/Landscape-wallpapers-6.jpg"
 
-size = Math.min(innerWidth / 2, 720) | 0
-params = "w=#{ size }&format=auto"
+# We'd actually calculate the size like this
+size = (innerWidth / 2) | 0
+
+params = "w=722&format=auto"
 optimizedSrc = "http://eager-proxy-test.imgix.net/#{ origSrc }?#{ encodeURIComponent params }"
 optimizedSrc += "&s=37165b62d072c2323d50ae4360ac08ab"
 

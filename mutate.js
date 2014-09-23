@@ -3,9 +3,9 @@
 
   origSrc = "http://www.ihd-wallpapers.com/wp-content/uploads/2014/08/Landscape-wallpapers-6.jpg";
 
-  size = Math.min(innerWidth / 2, 720) | 0;
+  size = (innerWidth / 2) | 0;
 
-  params = "w=" + size + "&format=auto";
+  params = "w=722&format=auto";
 
   optimizedSrc = "http://eager-proxy-test.imgix.net/" + origSrc + "?" + (encodeURIComponent(params));
 
