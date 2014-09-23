@@ -1,9 +1,11 @@
-changes =
-  'h1': {content: "Other content"}
-  'img[src="https://www.google.com/images/srpr/logo11w.png"]': {attrs: {src: 'http://email-assets.eager.io/logo-200x200.png'}}
+origSrc = "http://www.ihd-wallpapers.com/wp-content/uploads/2014/08/Landscape-wallpapers-6.jpg"
 
-textChanges =
-  'Four score and seven years': 'Forty seven years'
+params = "w=#{ (innerWidth / 2) | 0 }&format=auto"
+optimizedSrc = "http://eager-proxy-test.imgix.net/#{ origSrc }?#{ encodeURIComponent params }"
+optimizedSrc += "&s=37165b62d072c2323d50ae4360ac08ab"
+
+changes =
+  'img.fast': {attrs: {src: optimizedSrc}}
 
 apply = (element, orders) ->
   if orders.content
@@ -18,10 +20,6 @@ checkNode = (addedNode) ->
       for selector, options of changes
         if addedNode.matches(selector)
           apply(addedNode, options)
-
-    when 3
-      for before, after of textChanges
-        addedNode.textContent = addedNode.textContent.replace(before, after)
 
 observer = new MutationObserver (mutations) ->
   for mutation in mutations

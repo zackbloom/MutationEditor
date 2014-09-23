@@ -1,19 +1,20 @@
 (function() {
-  var apply, changes, checkNode, observer, scan, textChanges;
+  var apply, changes, checkNode, observer, optimizedSrc, origSrc, params;
+
+  origSrc = "http://www.ihd-wallpapers.com/wp-content/uploads/2014/08/Landscape-wallpapers-6.jpg";
+
+  params = "w=" + ((innerWidth / 2) | 0) + "&format=auto";
+
+  optimizedSrc = "http://eager-proxy-test.imgix.net/" + origSrc + "?" + (encodeURIComponent(params));
+
+  optimizedSrc += "&s=37165b62d072c2323d50ae4360ac08ab";
 
   changes = {
-    'h1': {
-      content: "Other content"
-    },
-    'img[src="https://www.google.com/images/srpr/logo11w.png"]': {
+    'img.fast': {
       attrs: {
-        src: 'http://email-assets.eager.io/logo-200x200.png'
+        src: optimizedSrc
       }
     }
-  };
-
-  textChanges = {
-    'Four score and seven years': 'Forty seven years'
   };
 
   apply = function(element, orders) {
@@ -33,7 +34,7 @@
   };
 
   checkNode = function(addedNode) {
-    var after, before, options, selector, _results, _results1;
+    var options, selector, _results;
     switch (addedNode.nodeType) {
       case 1:
         _results = [];
@@ -46,14 +47,6 @@
           }
         }
         return _results;
-        break;
-      case 3:
-        _results1 = [];
-        for (before in textChanges) {
-          after = textChanges[before];
-          _results1.push(addedNode.textContent = addedNode.textContent.replace(before, after));
-        }
-        return _results1;
     }
   };
 
@@ -80,20 +73,5 @@
     childList: true,
     subtree: true
   });
-
-  scan = function(el) {
-    var child, _i, _len, _ref, _results;
-    checkNode(el);
-    if (!el.childList) {
-      return;
-    }
-    _ref = el.childList;
-    _results = [];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      child = _ref[_i];
-      _results.push(scan(child));
-    }
-    return _results;
-  };
 
 }).call(this);
