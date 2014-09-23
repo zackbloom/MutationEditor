@@ -1,11 +1,15 @@
 origSrc = "http://www.ihd-wallpapers.com/wp-content/uploads/2014/08/Landscape-wallpapers-6.jpg"
 
-# We'd actually calculate the size like this
-size = (innerWidth / 2) | 0
+# This should normally not be public:
+token = "PJUKGUtr"
 
-params = "w=722&format=auto"
-optimizedSrc = "http://eager-proxy-test.imgix.net/#{ origSrc }?#{ encodeURIComponent params }"
-optimizedSrc += "&s=37165b62d072c2323d50ae4360ac08ab"
+size = (innerWidth / 2) | 0
+params = encodeURIComponent "w=#{ size }&format=auto"
+path = "/#{ origSrc }"
+
+sign = token + path + "?" + params
+
+optimizedSrc = "http://eager-proxy-test.imgix.net#{ path }?#{ params }&s=#{ md5 sign }"
 
 changes =
   'img.fast': {attrs: {src: optimizedSrc}}

@@ -1,15 +1,19 @@
 (function() {
-  var apply, changes, checkNode, observer, optimizedSrc, origSrc, params, size;
+  var apply, changes, checkNode, observer, optimizedSrc, origSrc, params, path, sign, size, token;
 
   origSrc = "http://www.ihd-wallpapers.com/wp-content/uploads/2014/08/Landscape-wallpapers-6.jpg";
 
+  token = "PJUKGUtr";
+
   size = (innerWidth / 2) | 0;
 
-  params = "w=722&format=auto";
+  params = encodeURIComponent("w=" + size + "&format=auto");
 
-  optimizedSrc = "http://eager-proxy-test.imgix.net/" + origSrc + "?" + (encodeURIComponent(params));
+  path = "/" + origSrc;
 
-  optimizedSrc += "&s=37165b62d072c2323d50ae4360ac08ab";
+  sign = token + path + "?" + params;
+
+  optimizedSrc = "http://eager-proxy-test.imgix.net" + path + "?" + params + "&s=" + (md5(sign));
 
   changes = {
     'img.fast': {
