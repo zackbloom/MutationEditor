@@ -1,9 +1,11 @@
 (function() {
-  var apply, changes, checkNode, observer, optimizedSrc, origSrc, params;
+  var apply, changes, checkNode, observer, optimizedSrc, origSrc, params, size;
 
   origSrc = "http://www.ihd-wallpapers.com/wp-content/uploads/2014/08/Landscape-wallpapers-6.jpg";
 
-  params = "w=" + ((innerWidth / 2) | 0) + "&format=auto";
+  size = Math.min(innerWidth / 2, 720) | 0;
+
+  params = "w=" + size + "&format=auto";
 
   optimizedSrc = "http://eager-proxy-test.imgix.net/" + origSrc + "?" + (encodeURIComponent(params));
 
